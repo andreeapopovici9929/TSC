@@ -1,0 +1,1 @@
+Laboratorul 1 - Instalare Ubuntu, Git ,ModelSim, Slack, Meld, VsCode
