@@ -6,9 +6,9 @@
  **********************************************************************/
 
 
-module instr_register_test
+module instr_register_test(  tb_ifc Laborator2_new);
   import instr_register_pkg::*;  // user-defined types are defined in instr_register_pkg.sv
-  (
+  
  // input  logic          clk,
  //  output logic          load_en,
  //  output logic          reset_n,
@@ -19,8 +19,7 @@ module instr_register_test
  //  output address_t      read_pointer,
  //  input  instruction_t  instruction_word
  
- tb_ifc Laborator2_new
-  );
+
 
   //timeunit 1ns/1ns;
 
@@ -38,16 +37,16 @@ module instr_register_test
     Laborator2_new.read_pointer   = 5'h1F;         // initialize read pointer
     Laborator2_new.load_en        = 1'b0;          // initialize load control line
     Laborator2_new.reset_n       <= 1'b0;          // assert reset_n (active low)
-    repeat (2) @(posedge clk) ;     // hold in reset for 2 clock cycles
+    repeat (2) @(posedge Laborator2_new.clk) ;     // hold in reset for 2 clock cycles
     Laborator2_new.reset_n        = 1'b1;          // deassert reset_n (active low)
 
     $display("\nWriting values to register stack...");
-    @(posedge clk) Laborator2_new.load_en = 1'b1;  // enable writing to register
+    @(posedge Laborator2_new.clk) Laborator2_new.load_en = 1'b1;  // enable writing to register
     repeat (3) begin
-      @(posedge clk) randomize_transaction;
-      @(negedge clk) print_transaction;
+      @(posedge Laborator2_new.clk) randomize_transaction;
+      @(negedge Laborator2_new.clk) print_transaction;
     end
-    @(posedge clk) Laborator2_new.load_en = 1'b0;  // turn-off writing to register
+    @(posedge Laborator2_new.clk) Laborator2_new.load_en = 1'b0;  // turn-off writing to register
 
     // read back and display same three register locations
     $display("\nReading back the same register locations written...");
@@ -55,11 +54,11 @@ module instr_register_test
       // later labs will replace this loop with iterating through a
       // scoreboard to determine which addresses were written and
       // the expected values to be read back
-      @(posedge clk) Laborator2_new.read_pointer = i;
-      @(negedge clk) print_results;
+      @(posedge Laborator2_new.clk) Laborator2_new.read_pointer = i;
+      @(negedge Laborator2_new.clk) print_results;
     end
 
-    @(posedge clk) ;
+    @(posedge Laborator2_new.clk) ;
     $display("\n***********************************************************");
     $display(  "***  THIS IS NOT A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
     $display(  "***  NEED TO VISUALLY VERIFY THAT THE OUTPUT VALUES     ***");
@@ -85,7 +84,7 @@ module instr_register_test
 
   function void print_transaction;
     $display("Writing to register location %0d: ", Laborator2_new.write_pointer);
-    $display("  opcode = %0d (%s)", Laborator2_new.opcode, opcode.name);
+    $display("  opcode = %0d (%s)", Laborator2_new.opcode, Laborator2_new.opcode.name);
     $display("  operand_a = %0d",   Laborator2_new.operand_a);
     $display("  operand_b = %0d\n", Laborator2_new.operand_b);
   endfunction: print_transaction

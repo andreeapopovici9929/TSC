@@ -21,25 +21,25 @@ module top;
   //address_t      write_pointer, read_pointer;
   //instruction_t  instruction_word;
   
-  logic          load_en;
-  logic          reset_n;
-  opcode_t       opcode;
-  operand_t      operand_a, operand_b;
-  address_t      write_pointer, read_pointer;
-  instruction_t  instruction_word;
+//logic          load_en;
+ // logic          reset_n;
+  //opcode_t       opcode;
+  //operand_t      operand_a, operand_b;
+  //address_t      write_pointer, read_pointer;
+  //instruction_t  instruction_word;
 
   // instantiate testbench and connect ports
-  instr_register_test test (
-    .clk(test_clk),
-    .load_en(Laborator2Int.load_en),
-    .reset_n(Laborator2Int.reset_n),
-    .operand_a(Laborator2Int.operand_a),
-    .operand_b(Laborator2Int.operand_b),
-    .opcode(Laborator2Int.opcode),
-    .write_pointer(Laborator2Int.write_pointer),
-    .read_pointer(Laborator2Int.read_pointer),
-    .instruction_word(Laborator2Int.instruction_word)
-   );
+  instr_register_test test (.Laborator2_new(Laborator2Int ));
+   // .clk(test_clk),
+    //.load_en(Laborator2Int.load_en),
+    //.reset_n(Laborator2Int.reset_n),
+    //.operand_a(Laborator2Int.operand_a),
+    //.operand_b(Laborator2Int.operand_b),
+    //.opcode(Laborator2Int.opcode),
+    //.write_pointer(Laborator2Int.write_pointer),
+    //.read_pointer(Laborator2Int.read_pointer),
+    //.instruction_word(Laborator2Int.instruction_word)
+
 
   // instantiate design and connect ports
   instr_register dut (
