@@ -23,40 +23,48 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
 
   //timeunit 1ns/1ns;
 
-  int seed = 555;
+  int seed = 555; //valoare initiala cu care se incepe randomiazrea
 
-  initial begin
+  initial begin //block unde lucram cu semnalele
     $display("\n\n***********************************************************");
     $display(    "***  THIS IS NOT A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
     $display(    "***  NEED TO VISUALLY VERIFY THAT THE OUTPUT VALUES     ***");
     $display(    "***  MATCH THE INPUT VALUES FOR EACH REGISTER LOCATION  ***");
+    $display(    "****************FIRST HEADER******************");
     $display(    "***********************************************************");
 
     $display("\nReseting the instruction register...");
-    Laborator2_new.cb.write_pointer  = 5'h00;         // initialize write pointer
-    Laborator2_new.cb.read_pointer   = 5'h1F;         // initialize read pointer
-    Laborator2_new.cb.load_en        = 1'b0;          // initialize load control line
+    Laborator2_new.cb.write_pointer  <= 5'h00;         // initialize write pointer
+    Laborator2_new.cb.read_pointer   <= 5'h1F;         // initialize read pointer
+    Laborator2_new.cb.load_en        <= 1'b0;          // initialize load control line
     Laborator2_new.cb.reset_n       <= 1'b0;          // assert reset_n (active low)
     repeat (2) @(posedge Laborator2_new.cb.clk) ;     // hold in reset for 2 clock cycles
-    Laborator2_new.cb.reset_n        = 1'b1;          // deassert reset_n (active low)
+    Laborator2_new.cb.reset_n        <= 1'b1;          // deassert reset_n (active low)
 
     $display("\nWriting values to register stack...");
-    @(posedge Laborator2_new.cb.clk) Laborator2_new.load_en = 1'b1;  // enable writing to register
+    @(posedge Laborator2_new.cb.clk) Laborator2_new.cb.load_en <= 1'b1;  // enable writing to register
     repeat (3) begin
       @(posedge Laborator2_new.cb.clk) randomize_transaction;
       @(negedge Laborator2_new.cb.clk) print_transaction;
     end
-    @(posedge Laborator2_new.cb.clk) Laborator2_new.load_en = 1'b0;  // turn-off writing to register
+    @(posedge Laborator2_new.cb.clk) Laborator2_new.cb.load_en <= 1'b0;  // turn-off writing to register
 
     // read back and display same three register locations
     $display("\nReading back the same register locations written...");
-    for (int i=0; i<=2; i++) begin
+    //for (int i=0; i<=2; i++) begin
+    //  // later labs will replace this loop with iterating through a
+    //  // scoreboard to determine which addresses were written and
+    //  // the expected values to be read back
+    //  @(posedge Laborator2_new.cb.clk) Laborator2_new.cb.read_pointer <= i;
+    //  @(negedge Laborator2_new.cb.clk) print_results;
+    //end
+       for (int i=0; i<=10; i++) begin
       // later labs will replace this loop with iterating through a
       // scoreboard to determine which addresses were written and
       // the expected values to be read back
-      @(posedge Laborator2_new.cb.clk) Laborator2_new.read_pointer = i;
+      @(posedge Laborator2_new.cb.clk) Laborator2_new.cb.read_pointer <= i;
       @(negedge Laborator2_new.cb.clk) print_results;
-    end
+      end
 
     @(posedge Laborator2_new.cb.clk) ;
     $display("\n***********************************************************");
@@ -67,7 +75,7 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
     $finish;
   end
 
-  function void randomize_transaction;
+  function void randomize_transaction; //FUNCTIA ARE TIMP DE SIMULARE0 - TASK POATE CONTINE TIMP DE SIMULARE  (IN TASK POTI PUNE INSTRUCTIUNI CARE CONSUMA TIMP)
     // A later lab will replace this function with SystemVerilog
     // constrained random values
     //
@@ -78,15 +86,16 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
     static int temp = 0;
     Laborator2_new.cb.operand_a     <= $random(seed)%16;                 // between -15 and 15
     Laborator2_new.cb.operand_b     <= $unsigned($random)%16;            // between 0 and 15
-    Laborator2_new.cb.opcode        <= opcode_t'($unsigned($random)%8);  // between 0 and 7, cast to opcode_t type
+    Laborator2_new.cb.opcode        <= opcode_t'($unsigned($random)%8);  // between 0 and 7, cast to opcode_t type //CAST-TRECE DIN INDEX IN STRING
     Laborator2_new.cb.write_pointer <= temp++;
   endfunction: randomize_transaction
 
-  function void print_transaction;
+  function void print_transaction; //FUNCTIA PRINTEAZA IN TRANSCRIPT VALORILE 
     $display("Writing to register location %0d: ", Laborator2_new.cb.write_pointer);
     $display("  opcode = %0d (%s)", Laborator2_new.cb.opcode, Laborator2_new.cb.opcode.name);
     $display("  operand_a = %0d",   Laborator2_new.cb.operand_a);
     $display("  operand_b = %0d\n", Laborator2_new.cb.operand_b);
+    $display("  Time = %dns", $time());
   endfunction: print_transaction
 
   function void print_results;
@@ -94,6 +103,7 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
     $display("  opcode = %0d (%s)", Laborator2_new.cb.instruction_word.opc, Laborator2_new.cb.instruction_word.opc.name);
     $display("  operand_a = %0d",   Laborator2_new.cb.instruction_word.op_a);
     $display("  operand_b = %0d\n", Laborator2_new.cb.instruction_word.op_b);
+    $display("  Time =  %dns", $time());
   endfunction: print_results
 
 endmodule: instr_register_test

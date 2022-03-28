@@ -16,11 +16,11 @@ import instr_register_pkg::*;  // user-defined types are defined in instr_regist
  input  opcode_t       opcode,
  input  address_t      write_pointer,
  input  address_t      read_pointer,
- output instruction_t  instruction_word
+ output instruction_t  instruction_word // DE AICI SE GENEREAZA SEMNALUL instruction_t CARE VA FI FOLOSIT IN INTERFATA
 );
  // timeunit 1ns/1ns;
 
-  instruction_t  iw_reg [0:31];  // an array of instruction_word structures
+  instruction_t  iw_reg [0:31];  // an array of instruction_word structures // 2 la 32 operatii
 
   // write to the register
   always@(posedge clk, negedge reset_n)   // write into register

@@ -7,12 +7,12 @@ package instr_register_pkg;
 
   typedef enum logic [3:0] {
   	ZERO,
-    PASSA,
-    PASSB,
-    ADD,
-    SUB,
-    MULT,
-    DIV,
+    PASSA, //ia val lui A
+    PASSB, // ia val lui B
+    ADD, //aduna valoarile
+    SUB, //scadere
+    MULT, // inmultire
+    DIV, //divizare
     MOD
   } opcode_t;
 
@@ -24,6 +24,6 @@ package instr_register_pkg;
     opcode_t  opc;
     operand_t op_a;
     operand_t op_b;
-  } instruction_t;
+  } instruction_t; // instruction_t-UN package
 
 endpackage: instr_register_pkg

@@ -1,6 +1,8 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /top/test/seed
+add wave -noupdate /top/test_clk
+add wave -noupdate /top/clk
 add wave -noupdate /top/dut/clk
 add wave -noupdate /top/dut/load_en
 add wave -noupdate /top/dut/reset_n
