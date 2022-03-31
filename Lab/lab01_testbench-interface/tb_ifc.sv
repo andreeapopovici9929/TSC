@@ -13,6 +13,7 @@ interface tb_ifc (input logic clk);
   logic          reset_n;
   opcode_t       opcode;
   operand_t      operand_a, operand_b;
+ // result_t       result;
   address_t      write_pointer, read_pointer;
   instruction_t  instruction_word;
 

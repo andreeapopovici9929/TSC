@@ -14,6 +14,7 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
  //  output logic          reset_n,
  //  output operand_t      operand_a,
  //  output operand_t      operand_b,
+ //  output operand_r      result,
  //  output opcode_t       opcode,
  //  output address_t      write_pointer,
  //  output address_t      read_pointer,
@@ -43,7 +44,8 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
 
     $display("\nWriting values to register stack...");
     @(posedge Laborator2_new.cb.clk) Laborator2_new.cb.load_en <= 1'b1;  // enable writing to register
-    repeat (3) begin
+    //repeat (7) begin
+      repeat (10) begin
       @(posedge Laborator2_new.cb.clk) randomize_transaction;
       @(negedge Laborator2_new.cb.clk) print_transaction;
     end
@@ -87,6 +89,7 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
     Laborator2_new.cb.operand_a     <= $random(seed)%16;                 // between -15 and 15
     Laborator2_new.cb.operand_b     <= $unsigned($random)%16;            // between 0 and 15
     Laborator2_new.cb.opcode        <= opcode_t'($unsigned($random)%8);  // between 0 and 7, cast to opcode_t type //CAST-TRECE DIN INDEX IN STRING
+
     Laborator2_new.cb.write_pointer <= temp++;
   endfunction: randomize_transaction
 
@@ -95,6 +98,7 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
     $display("  opcode = %0d (%s)", Laborator2_new.cb.opcode, Laborator2_new.cb.opcode.name);
     $display("  operand_a = %0d",   Laborator2_new.cb.operand_a);
     $display("  operand_b = %0d\n", Laborator2_new.cb.operand_b);
+    //$display("  result = %0d\n", Laborator2_new.cb.result);
     $display("  Time = %dns", $time());
   endfunction: print_transaction
 
@@ -103,7 +107,9 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
     $display("  opcode = %0d (%s)", Laborator2_new.cb.instruction_word.opc, Laborator2_new.cb.instruction_word.opc.name);
     $display("  operand_a = %0d",   Laborator2_new.cb.instruction_word.op_a);
     $display("  operand_b = %0d\n", Laborator2_new.cb.instruction_word.op_b);
+    $display("  Result = %0d\n", Laborator2_new.cb.instruction_word.result);
     $display("  Time =  %dns", $time());
+    //adau result
   endfunction: print_results
 
 endmodule: instr_register_test

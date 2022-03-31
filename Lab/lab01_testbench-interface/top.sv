@@ -48,6 +48,7 @@ module top;
     .reset_n(Laborator2Int.reset_n),
     .operand_a(Laborator2Int.operand_a),
     .operand_b(Laborator2Int.operand_b),
+    //.result(Laborator2Int.result),
     .opcode(Laborator2Int.opcode),
     .write_pointer(Laborator2Int.write_pointer),
     .read_pointer(Laborator2Int.read_pointer),
