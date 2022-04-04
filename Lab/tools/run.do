@@ -7,6 +7,7 @@
 ## transcript file ../reports/regression_transcript/transcript_$1
 
 # Check if the sources must be re-compiled
+#echo $1 add 4-04-2022 :c aici afisam ce avem in %1 - adica in run_test.bat la linia vsim -gui -do "do run.do %1"
 if {[file isdirectory work]} {
   set compile_on 0
 } else {
@@ -20,7 +21,8 @@ if {$compile_on || [batch_mode] == 0} {
 }
 
 # Load project
-  eval vsim -novopt -quiet -nocoverage +notimingchecks +nowarnTSCALE -sva top
+  eval vsim -novopt -quiet -nocoverage +notimingchecks +nowarnTSCALE -sv_seed $1 -sva top  
+  #add sv_seed $1, echo a fost intermediar
 # eval vsim -novopt -quiet -coverage -notogglevlogints +notimingchecks +nowarnTSCALE +TESTNAME=$1 -sva top
 
 # Run log/wave commands
