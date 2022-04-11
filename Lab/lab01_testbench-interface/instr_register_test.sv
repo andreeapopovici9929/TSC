@@ -10,6 +10,27 @@ import instr_register_pkg::*;
 
 class First_test;
   virtual tb_ifc.TB Laborator2_new; // declararea interfatei in clasa#
+  parameter generate_numberofoperation=100;
+
+  covergroup my_coverage();
+    coverpoint  Laborator2_new.cb.operand_a
+      {
+        bins op_a_values_neg={[-15:-1]};
+        bins op_a_values_0={0};
+        bins op_a_values_poz={[1:15]};
+      }
+      coverpoint  Laborator2_new.cb.operand_b
+      {
+        bins op_b_values_0={0};
+        bins op_b_values_poz={[1:15]};
+      }
+        coverpoint  Laborator2_new.cb.opcode
+      {
+        bins op_opcode_values={[0:7]};
+      }
+  endgroup
+
+    
   function new( virtual tb_ifc.TB interfata_functie );
     Laborator2_new=interfata_functie; // constructorului ii dam interfata
     //interfata_functiei- este parametrul iar Laborator2_new este interfata noastra 
@@ -34,11 +55,12 @@ class First_test;
     Laborator2_new.cb.reset_n        <= 1'b1;          // deassert reset_n (active low)
 
     $display("\nWriting values to register stack...");
-    @(posedge Laborator2_new.cb) Laborator2_new.cb.load_en <= 1'b1;  // enable writing to register
+    @(posedge Laborator2_new.cb)Laborator2_new.cb.load_en <= 1'b1;  // enable writing to register
     //repeat (7) begin
-      repeat (10) begin
+      repeat (generate_numberofoperation) begin
       @(posedge Laborator2_new.cb) randomize_transaction;
       @(negedge Laborator2_new.cb) print_transaction;
+      my_coverage.sample();
     end
     @(posedge Laborator2_new.cb) Laborator2_new.cb.load_en <= 1'b0;  // turn-off writing to register
 
@@ -51,12 +73,13 @@ class First_test;
     //  @(posedge Laborator2_new.cb.clk) Laborator2_new.cb.read_pointer <= i;
     //  @(negedge Laborator2_new.cb.clk) print_results;
     //end
-       for (int i=0; i<=9; i++) begin
+       for (int i=0; i<=generate_numberofoperation; i++) begin
       // later labs will replace this loop with iterating through a
       // scoreboard to determine which addresses were written and
       // the expected values to be read back
       @(posedge Laborator2_new.cb) Laborator2_new.cb.read_pointer <= i;
       @(negedge Laborator2_new.cb) print_results;
+       my_coverage.sample();
       end
 
     @(posedge Laborator2_new.cb) ;
@@ -133,6 +156,6 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
 endmodule: instr_register_test
 
 
-
+//random stabila pe thread si urandom stabila pe clase
 
 //clasa - tot in afar de initial-begin intra intr-o clasa : functii, task-uri, interfata si variabile interne ( ex seed)
