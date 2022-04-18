@@ -9,30 +9,37 @@
 import instr_register_pkg::*;
 
 class First_test;
-  virtual tb_ifc.TB Laborator2_new; // declararea interfatei in clasa#
-  parameter generate_numberofoperation=100;
+  virtual tb_ifc.TB Laborator2_new; // declararea interfatei in clasa
+  parameter generate_numberofoperation=600;
 
-  covergroup my_coverage();
-    coverpoint  Laborator2_new.cb.operand_a
+ 
+ covergroup my_coverage;
+    OPA_COVER: coverpoint  Laborator2_new.cb.operand_a //OPA_COVER este o eticheta
       {
-        bins op_a_values_neg={[-15:-1]};
+        bins op_a_values_neg[]={[-15:-1]};  //am pus parantezele patrate ca sa ne poata lua toate valoriile din interval - facem un vector
         bins op_a_values_0={0};
-        bins op_a_values_poz={[1:15]};
+        bins op_a_values_poz[]={[1:15]};
       }
-      coverpoint  Laborator2_new.cb.operand_b
+       OPB_COVER: coverpoint  Laborator2_new.cb.operand_b
       {
         bins op_b_values_0={0};
-        bins op_b_values_poz={[1:15]};
+        bins op_b_values_poz[]={[1:15]};
       }
-        coverpoint  Laborator2_new.cb.opcode
+        OPCODE_COVER: coverpoint  Laborator2_new.cb.opcode
       {
-        bins op_opcode_values={[0:7]};
+        bins op_opcode_values[]={[0:7]};
+      }  
+      RESULTS_COVER: coverpoint Laborator2_new.cb.instruction_word.result
+      {
+        bins result_values_neg[] = {[-225:-1]};
+        bins result_values_zero = {0};
+        bins result_values_pos[] = {[1:225]};
       }
   endgroup
-
     
   function new( virtual tb_ifc.TB interfata_functie );
     Laborator2_new=interfata_functie; // constructorului ii dam interfata
+    my_coverage=new();
     //interfata_functiei- este parametrul iar Laborator2_new este interfata noastra 
   endfunction: new
   //int seed = 555; //valoare initiala cu care se incepe randomiazrea
@@ -104,7 +111,7 @@ class First_test;
    //Laborator2_new.cb.operand_a     <= $random(seed)%16;                 // between -15 and 15
    //Laborator2_new.cb.operand_b     <= $unsigned($random)%16;            // between 0 and 15
    //Laborator2_new.cb.opcode        <= opcode_t'($unsigned($random)%8);  // between 0 and 7, cast to opcode_t type //CAST-TRECE DIN INDEX IN STRING
-    Laborator2_new.cb.operand_a     <= $urandom%16;                 // between -15 and 15
+    Laborator2_new.cb.operand_a     <= $signed($urandom())%16;                       // between -15 and 15 //urandom genereaza numere pe 32 de biti %16-aduce valoare intre -199 si 1999
     Laborator2_new.cb.operand_b     <= $unsigned($urandom)%16;            // between 0 and 15
     Laborator2_new.cb.opcode        <= opcode_t'($unsigned($urandom)%8);  // between 0 and 7, cast to opcode_t type //CAST-TRECE DIN IND
     Laborator2_new.cb.write_pointer <= temp++;
