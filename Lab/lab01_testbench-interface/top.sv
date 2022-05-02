@@ -12,7 +12,7 @@ module top;
   logic clk;
   logic test_clk;
 
-	tb_ifc Laborator2Int (clk);
+	tb_ifc Laborator2Int (clk); //am importat interfata - am creat o instanta pentru interfata
   // interconnecting signals
   //logic          load_en;
   //logic          reset_n;
@@ -29,7 +29,8 @@ module top;
   //instruction_t  instruction_word;
 
   // instantiate testbench and connect ports
-  instr_register_test test (.Laborator2_new(Laborator2Int ));
+  instr_register_test test (.Laborator2_new(Laborator2Int )); //.Laborator2_new -este firul pe care il folosim mai departe si care contine 
+                                                     //semnalele care sunt 
    // .clk(test_clk),
     //.load_en(Laborator2Int.load_en),
     //.reset_n(Laborator2Int.reset_n),
@@ -58,14 +59,14 @@ module top;
   // clock oscillators
   initial begin
     clk <= 0;
-    forever #5  clk = ~clk;
+    forever #5  clk = ~clk; //#5- odata la 5 unitati de timp clk se neaga
   end
 
   initial begin
     test_clk <=0;
     // offset test_clk edges from clk to prevent races between
     // the testbench and the design
-    #4 forever begin
+    #4 forever begin //asteapta 4 unitati de timp inainte sa intre in forever 
       #2ns test_clk = 1'b1;
       #8ns test_clk = 1'b0;
     end

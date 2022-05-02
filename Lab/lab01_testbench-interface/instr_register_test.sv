@@ -9,8 +9,9 @@
 import instr_register_pkg::*;
 
 class First_test;
-  virtual tb_ifc.TB Laborator2_new; // declararea interfatei in clasa
-  parameter generate_numberofoperation=600;
+  virtual tb_ifc.TB Laborator2_new; // declararea interfatei in clasa pentru a putea fi folosita la mdoulul de la final
+  //Laborator2_new asta trebuie sa fie la fel cu cel din top
+  parameter generate_numberofoperation=5; 
 
  
  covergroup my_coverage;
@@ -37,7 +38,7 @@ class First_test;
       }
   endgroup
     
-  function new( virtual tb_ifc.TB interfata_functie );
+  function new( virtual tb_ifc.TB interfata_functie ); //CONSTRUCTORUL - SINTAXA SE APELEAZA AUTOMAT DE FIECARE DATA CAND SE 
     Laborator2_new=interfata_functie; // constructorului ii dam interfata
     my_coverage=new();
     //interfata_functiei- este parametrul iar Laborator2_new este interfata noastra 
@@ -111,7 +112,7 @@ class First_test;
    //Laborator2_new.cb.operand_a     <= $random(seed)%16;                 // between -15 and 15
    //Laborator2_new.cb.operand_b     <= $unsigned($random)%16;            // between 0 and 15
    //Laborator2_new.cb.opcode        <= opcode_t'($unsigned($random)%8);  // between 0 and 7, cast to opcode_t type //CAST-TRECE DIN INDEX IN STRING
-    Laborator2_new.cb.operand_a     <= $signed($urandom())%16;                       // between -15 and 15 //urandom genereaza numere pe 32 de biti %16-aduce valoare intre -199 si 1999
+    Laborator2_new.cb.operand_a     <= $signed($urandom())%16;            // between -15 and 15 //urandom genereaza numere pe 32 de biti %16-aduce valoare intre -199 si 1999
     Laborator2_new.cb.operand_b     <= $unsigned($urandom)%16;            // between 0 and 15
     Laborator2_new.cb.opcode        <= opcode_t'($unsigned($urandom)%8);  // between 0 and 7, cast to opcode_t type //CAST-TRECE DIN IND
     Laborator2_new.cb.write_pointer <= temp++;
@@ -153,11 +154,12 @@ module instr_register_test(  tb_ifc.TB Laborator2_new);
  
   //timeunit 1ns/1ns;
 
-  initial begin
-    First_test fs_test;
-    fs_test=new(Laborator2_new); //adaugam interfata si o apelam  de aici direct, fara sa mai facem inca o linie suplimentara :fs_test.Laborator2_new=Laborator2_new;
-    //fs_test.Laborator2_new=Laborator2_new;
-    fs_test.run(); // apelarea task-ului creat mai jos
+  initial begin //- nu se baga in clasa 
+    First_test fs_test; //fs_test si se apeleaza cu constructorul fs_test-instanta clasei
+    fs_test=new(Laborator2_new); //adaugam interfata in constructor si o apelam  de aici direct,
+    // fara sa mai facem inca o linie suplimentara :fs_test.Laborator2_new=Laborator2_new; 
+    //din cauza constructorului
+    fs_test.run(); // apelarea task-ului creat 
   end
 
 endmodule: instr_register_test

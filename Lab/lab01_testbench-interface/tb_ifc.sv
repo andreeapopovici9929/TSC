@@ -2,7 +2,7 @@
  * A SystemVerilog testbench for an instruction register; This file
  * contains the interface to connect the testbench to the design
  **********************************************************************/
-interface tb_ifc (input logic clk);
+interface tb_ifc (input logic clk); //clk-e folosit aici deoarece trebuie transmis mereu cand apelam interfata
   //timeunit 1ns/1ns;
 
   // user-defined types are defined in instr_register_pkg.sv
@@ -20,9 +20,9 @@ interface tb_ifc (input logic clk);
   clocking cb@(clk);
                input instruction_word ;
               output load_en, reset_n, opcode, operand_a,operand_b,write_pointer, read_pointer;
-endclocking;
+endclocking; //sincronizeaza semnalele dupa un anumit clock - nu-l mai definim dupa deoarece el face mereu sincronizarea
 
-modport TB (clocking cb);
+modport TB (clocking cb); //il folosim doar ca sa apelam clocking block-ul 
 
   
 

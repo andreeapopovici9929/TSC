@@ -7,8 +7,8 @@
  **********************************************************************/
 
 module instr_register
-import instr_register_pkg::*;  // user-defined types are defined in instr_register_pkg.sv
-(input  logic          clk,
+import instr_register_pkg::*;  // pachetul instr_register_pkg -> declaram semnalele in el
+(input  logic          clk, 
  input  logic          load_en,
  input  logic          reset_n,
  input  operand_t      operand_a,
@@ -21,25 +21,27 @@ import instr_register_pkg::*;  // user-defined types are defined in instr_regist
 );
  // timeunit 1ns/1ns;
 
-  instruction_t  iw_reg [0:31];  // an array of instruction_word structures // 2 la 32 operatii //aici avem operatiile din instr_register_pkg
+  instruction_t  iw_reg [0:31];  // an array of instruction_word structures // 2 la 32 operatii 
+  
+  //aici avem operatiile din instr_register_pkg
 
   // write to the register
   always@(posedge clk, negedge reset_n)   // write into register
     if (!reset_n) begin
-      foreach (iw_reg[i])
+      foreach (iw_reg[i]) //pentru fiecare valoare din array
         iw_reg[i] = '{opc:ZERO,default:0};  // reset to all zeros
     end
     else if (load_en) begin
       case (opcode)
               //iw_reg[write_pointer] = '{opcode,operand_a,operand_b};
-      ZERO  : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, 'b0};
+      ZERO  : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, 'b0}; //write_pointer e pozitia pe care ne aflam
       PASSA : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, operand_a};
       PASSB : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, operand_b};
       ADD   : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, $signed(operand_a + operand_b)};
       SUB   : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, $signed(operand_a - operand_b)};
       MULT  : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, $signed(operand_a * operand_b)};
       DIV   : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, $signed(operand_a / operand_b)};
-      MOD   : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, $signed(operand_a % operand_b)};
+      MOD   : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, $signed(operand_a % operand_b)}; //sign
     default : iw_reg[write_pointer] = '{opcode, operand_a, operand_b, 'x};
     endcase
   end
